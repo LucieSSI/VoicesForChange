@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nothing to See Here</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;1,300&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./style.css">
+    <style>
+        .empty-page {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .empty-deco {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(6rem, 20vw, 16rem);
+            color: transparent;
+            -webkit-text-stroke: 1px rgba(201, 169, 110, 0.08);
+            line-height: 1;
+            margin-bottom: 1rem;
+            user-select: none;
+        }
+
+        .empty-heading {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 300;
+            font-style: italic;
+            color: var(--white);
+            margin-bottom: 1rem;
+        }
+
+        .empty-sub {
+            font-size: 0.88rem;
+            color: var(--white-muted);
+            letter-spacing: 0.1em;
+            margin-bottom: 2.5rem;
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a class="nav-logo" href="index.html"><span>V</span>oices For Change</a>
+    <ul class="nav-links">
+        <li><a href="index.html#issues">Issues</a></li>
+        <li><a href="#">News</a></li>
+        <li><a href="#">Get Involved</a></li>
+        <li><a href="#">About</a></li>
+    </ul>
+    <ul class="top-button">
+        <li class="top"><a href="index.html" class="cta-btn">Back to Top</a></li>
+    </ul>
+</nav>
+
+<div class="empty-page">
+    <div class="empty-deco">404</div>
+    <h1 class="empty-heading">Nothing to see here.</h1>
+    <p class="empty-sub">This page is under construction.</p>
+    <a href="index.html" class="btn-primary">Go Back Home</a>
+</div>
+
+</body>
+</html>

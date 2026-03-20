@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Us — Voices For Change</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./style.css">
+  <style>
+
+    /* ── SLIDESHOW HERO ── */
+    .about-hero {
+      position: relative;
+      height: 100vh;
+      min-height: 600px;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 1.2s ease;
+      z-index: 0;
+    }
+    .slide.active { opacity: 1; z-index: 1; }
+
+    /* Placeholder gradient slides — swap src with real images */
+    .slide-1 { background: linear-gradient(135deg, rgba(26,18,8,0.5) 0%, rgba(14,14,12,0.4) 50%, rgba(28,22,10,0.5) 100%), url('./public/pic1.jpg') center/cover no-repeat; }
+    .slide-2 { background: linear-gradient(135deg, rgba(26,18,8,0.5) 0%, rgba(14,14,12,0.4) 50%, rgba(28,22,10,0.5) 100%), url('./public/pic2.jpg') center/cover no-repeat; }
+    .slide-3 { background: linear-gradient(135deg, rgba(26,18,8,0.5) 0%, rgba(14,14,12,0.4) 50%, rgba(28,22,10,0.5) 100%), url('./public/pic3.jpg') center/cover no-repeat; }
+
+    /* Faint deco text per slide */
+    .slide::after {
+      content: attr(data-deco);
+      position: absolute;
+      right: -0.05em;
+      bottom: -0.1em;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28vw;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(201,169,110,0.06);
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    /* Dark gradient overlay so text is always readable */
+    .about-hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(9,9,9,0.85) 0%, rgba(9,9,9,0.3) 60%, transparent 100%);
+      z-index: 2;
+    }
+
+    .about-hero-content {
+      position: relative;
+      z-index: 3;
+      padding: 0 4rem 7rem;
+      max-width: 56rem;
+    }
+
+    .about-hero-eyebrow {
+      font-size: 0.7rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards 0.3s;
+    }
+    .about-hero-eyebrow::before {
+      content: '';
+      display: block;
+      width: 2rem;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    .about-hero-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3.5rem, 8vw, 8rem);
+      line-height: 0.92;
+      letter-spacing: 0.02em;
+      color: var(--white);
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.5s;
+    }
+    .about-hero-title em {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-weight: 300;
+      color: var(--accent);
+    }
+
+    .about-hero-sub {
+      font-size: 1rem;
+      color: var(--white-dim);
+      max-width: 32rem;
+      line-height: 1.8;
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.7s;
+    }
+
+    .about-hero-actions {
+      display: flex;
+      gap: 1rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.9s;
+    }
+
+    /* Slide dots */
+    .slide-dots {
+      position: absolute;
+      bottom: 2.5rem;
+      right: 4rem;
+      z-index: 4;
+      display: flex;
+      gap: 0.6rem;
+      align-items: center;
+    }
+    .dot {
+      width: 6px;
+      height: 6px;
+      background: var(--white-muted);
+      cursor: pointer;
+      transition: background 0.3s, width 0.3s;
+    }
+    .dot.active {
+      background: var(--accent);
+      width: 24px;
+    }
+
+    /* Progress bar */
+    .slide-progress {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 2px;
+      background: var(--accent);
+      width: 0%;
+      z-index: 5;
+      transition: none;
+    }
+    .slide-progress.running {
+      transition: width 5s linear;
+      width: 100%;
+    }
+
+    /* ── TEAM SECTION ── */
+    .team-section {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+    }
+    .team-header {
+      padding: 6rem 4rem 3rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+    }
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .team-card {
+      padding: 4rem;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.25s;
+      display: flex;
+      gap: 2rem;
+      align-items: flex-start;
+    }
+    .team-card:nth-child(2n) { border-right: none; }
+    .team-card:nth-last-child(-n+2) { border-bottom: none; }
+    .team-card:hover { background: var(--card); }
+    .team-avatar {
+      width: 5rem;
+      height: 5rem;
+      flex-shrink: 0;
+      border: 1px solid var(--border-light);
+      background: var(--card);
+      position: relative;
+      overflow: hidden;
+      object-fit: cover;
+      display: block;
+    }
+    /* Placeholder pattern for avatar */
+    .team-avatar::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, var(--border) 0%, transparent 100%);
+    }
+    .team-info { flex: 1; }
+    .team-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 400;
+      color: var(--white);
+      margin-bottom: 0.2rem;
+    }
+    .team-role {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+    .team-bio {
+      font-size: 0.85rem;
+      color: var(--white-muted);
+      line-height: 1.75;
+    }
+
+    /* ── ORGANIZATIONS SECTION ── */
+    .orgs-section {
+      background: var(--black);
+      border-top: 1px solid var(--border);
+    }
+    .orgs-header {
+      padding: 6rem 4rem 3rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .orgs-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .org-card {
+      padding: 3.5rem 4rem;
+      border-right: 1px solid var(--border);
+      transition: background 0.25s;
+    }
+    .org-card:last-child { border-right: none; }
+    .org-card:hover { background: var(--card); }
+    .org-icon {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.5rem;
+      color: rgba(201,169,110,0.25);
+      line-height: 1;
+      margin-bottom: 1.5rem;
+      letter-spacing: 0.05em;
+    }
+    .org-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 400;
+      color: var(--white);
+      margin-bottom: 0.75rem;
+    }
+    .org-desc {
+      font-size: 0.84rem;
+      color: var(--white-muted);
+      line-height: 1.75;
+      margin-bottom: 1.5rem;
+    }
+    .org-link {
+      font-size: 0.68rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: gap 0.2s;
+    }
+    .org-link:hover { gap: 0.9rem; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .about-hero-content { padding: 0 1.5rem 6rem; }
+      .slide-dots { right: 1.5rem; }
+      .team-header { padding: 3.5rem 1.5rem; flex-direction: column; align-items: flex-start; gap: 1rem; }
+      .team-grid { grid-template-columns: 1fr; }
+      .team-card { border-right: none; border-bottom: 1px solid var(--border); padding: 2.5rem 1.5rem; flex-direction: column; }
+      .orgs-header { padding: 3.5rem 1.5rem; }
+      .orgs-grid { grid-template-columns: 1fr; }
+      .org-card { border-right: none; border-bottom: 1px solid var(--border); padding: 2.5rem 1.5rem; }
+      .org-card:last-child { border-bottom: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="index.html"><span>V</span>oices For Change</a>
+  <ul class="nav-links">
+    <li><a href="index.html#issues">Issues</a></li>
+    <li><a href="index.html#involved">Get Involved</a></li>
+    <li><a href="index.html#news">News</a></li>
+    <li><a href="about.html" style="color:var(--accent)">About Us</a></li>
+  </ul>
+  <ul class="top-button">
+    <li class="top"><a href="index.html" class="cta-btn">&#8592; Main Page</a></li>
+  </ul>
+</nav>
+
+<!-- HERO SLIDESHOW -->
+<section class="about-hero">
+
+  <div class="slide slide-1 active" data-deco="WHO"></div>
+  <div class="slide slide-2" data-deco="WE"></div>
+  <div class="slide slide-3" data-deco="ARE"></div>
+
+  <div class="about-hero-overlay"></div>
+
+  <div class="about-hero-content">
+    <p class="about-hero-eyebrow">The People &bull; The Mission &bull; The Work</p>
+    <h1 class="about-hero-title">
+      Meet the team<br>
+      <em>driving change</em>
+    </h1>
+    <p class="about-hero-sub">
+      We are researchers, policy advocates, and technologists united by a single conviction: that the future of AI in the workplace must be shaped by people — not just by algorithms.
+    </p>
+    <div class="about-hero-actions">
+      <a href="#team" class="btn-primary">Our Team</a>
+      <a href="#organizations" class="btn-secondary">Who We Support</a>
+    </div>
+  </div>
+
+  <div class="slide-dots">
+    <div class="dot active" data-index="0"></div>
+    <div class="dot" data-index="1"></div>
+    <div class="dot" data-index="2"></div>
+  </div>
+
+  <div class="slide-progress" id="slideProgress"></div>
+</section>
+
+<!-- TEAM -->
+<section id="team" class="team-section">
+  <div class="team-header">
+    <div>
+      <p class="section-tag">Our Team</p>
+      <h2 class="section-heading" style="margin-bottom:0">The people <em>behind the work</em></h2>
+    </div>
+  </div>
+  <div class="team-grid">
+    <div class="team-card">
+      <div class="team-avatar">
+    <img src="member1.jpg" alt="Placeholder Name" />
+</div>
+      <div class="team-info">
+        <div class="team-name">Zachary Matt De Leon</div>
+        <div class="team-role">Founder &amp; Lead Researcher</div>
+        <p class="team-bio">Mr. De Leon is a researcher for the team’s website. His expertise is gathering data and organizing credible resources relevant to the topic. As such, he is responsible for searching for organizations that support the advocacy of the team and proposed the main idea of the site to their Web Development adviser, Sir Chester Chavez.</p>
+      </div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar">
+    <img src="member1.jpg" alt="Placeholder Name" />
+</div>
+      <div class="team-info">
+        <div class="team-name">Seth Andrew Lobo</div>
+        <div class="team-role">Software Engineer &amp; Web Designer</div>
+        <p class="team-bio">Short bio for this team member. A sentence or two about their background and what they bring to the team's advocacy work on responsible AI policy.</p>
+      </div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar">
+    <img src="member1.jpg" alt="Placeholder Name" />
+</div>
+      <div class="team-info">
+        <div class="team-name">Marco Daniel Dimapilis</div>
+        <div class="team-role">Researcher &amp; Partnerships</div>
+        <p class="team-bio">Short bio for this team member. A sentence or two about their background and what they bring to the team's advocacy work on responsible AI policy.</p>
+      </div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar">
+    <img src="member1.jpg" alt="Placeholder Name" />
+</div>
+      <div class="team-info">
+        <div class="team-name">Fritz Eizekiel Villanueva</div>
+        <div class="team-role">Researcher &amp; Web Advisor</div>
+        <p class="team-bio">Short bio for this team member. A sentence or two about their background and what they bring to the team's advocacy work on responsible AI policy.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ORGANIZATIONS WE SUPPORT -->
+<section id="organizations" class="orgs-section">
+  <div class="orgs-header">
+    <p class="section-tag">Organizations We Support</p>
+    <h2 class="section-heading">The allies <em>amplifying our work</em></h2>
+    <p style="font-size:0.9rem; color:var(--white-muted); max-width:42rem; line-height:1.8; margin-top:1rem;">
+      We partner with and advocate alongside organizations that share our commitment to ethical AI, worker protection, and transparent technology governance.
+    </p>
+  </div>
+  <div class="orgs-grid" style="grid-template-columns: repeat(2, 1fr);">
+    <div class="org-card">
+      <div class="org-icon">CODE AI</div>
+      <div class="org-name">Coalition of Digital Workers — Artificial Intelligence</div>
+      <p class="org-desc">CODE AI is a union represented by Lean Porquia, comprised of members of the BPO Industry Employees Network (BIEN). It advocates for the rights of digital employees in IT, call centers, HR, and related sectors — fighting for legal protection, fair pay, and safe working conditions. As structural unemployment grows with the rise of AI, CODE AI was founded to demand strict accountability laws for employers. A forecast cited by Beltran (2025) warns of potentially 300,000 BPO jobs lost, underscoring the urgency of meaningful AI regulation.</p>
+      <a href="nothing.html" class="org-link">Learn More &#8594;</a>
+    </div>
+    <div class="org-card" style="border-right:none;">
+      <div class="org-icon">NAIC</div>
+      <div class="org-name">National Artificial Intelligence Commission</div>
+      <p class="org-desc">The NAIC is a proposed government agency under Senate Bill 25: The AI Regulation Act, authored by Senator Pia Cayetano. To be led by DOST Secretary Renato Solidum Jr., its core mandate is to assess the risks and ethics of AI integration in the workplace while supporting beneficial AI development in agriculture, health, education, and natural resource management. The Commission would create public-facing online portals for accessing AI systems and reporting concerns, and would collaborate with international bodies to secure policies that respect human-AI collaboration.</p>
+      <a href="nothing.html" class="org-link">Learn More &#8594;</a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BAND -->
+<section class="cta-band">
+  <div>
+    <h2 class="cta-heading">
+      Believe In<br>
+      <em>Responsible</em> AI.
+    </h2>
+  </div>
+  <div class="cta-actions">
+    <a href="index.html#involved" class="btn-primary" style="font-size:0.82rem; padding:1rem 2.5rem;">Take Action</a>
+    <a href="index.html" class="btn-secondary" style="font-size:0.82rem; padding:1rem 2.5rem;">Back to Home</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-brand-name"><span>V</span>oices For Change</div>
+      <p class="footer-tagline">Advocating for responsible AI integration in the workplace — where human oversight and technological progress go hand in hand.</p>
+      <div class="footer-socials">
+        <div class="social-btn">&#120143;</div>
+        <div class="social-btn">in</div>
+        <div class="social-btn">f</div>
+      </div>
+    </div>
+    <div>
+      <p class="footer-col-title">Information</p>
+      <ul class="footer-links">
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="nothing.html">Our History</a></li>
+        <li><a href="nothing.html">Annual Reports</a></li>
+        <li><a href="nothing.html">Financials</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="footer-col-title">Programs</p>
+      <ul class="footer-links">
+        <li><a href="nothing.html">Placeholder Program</a></li>
+        <li><a href="nothing.html">Placeholder Program</a></li>
+        <li><a href="nothing.html">Placeholder Program</a></li>
+        <li><a href="nothing.html">Placeholder Program</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="footer-col-title">Contact</p>
+      <ul class="footer-links">
+        <li><a href="nothing.html"><span class="__cf_email__" data-cfemail="abdbc7cac8cec3c4c7cfced9ebcec6cac2c785c4d9cc">[email&#160;protected]</span></a></li>
+        <li><a href="nothing.html">(000) 000-0000</a></li>
+        <li><a href="nothing.html">000 Placeholder St.</a></li>
+        <li><a href="nothing.html">City, State 00000</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-copy">&copy; 0000 Voices For Change. All rights reserved. 501(c)(3) nonprofit.</p>
+    <div class="footer-legal">
+      <a href="nothing.html">Privacy Policy</a>
+      <a href="nothing.html">Terms of Use</a>
+      <a href="nothing.html">Accessibility</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Slideshow logic
+  const slides = document.querySelectorAll('.slide');
+  const dots   = document.querySelectorAll('.dot');
+  const bar    = document.getElementById('slideProgress');
+  let current  = 0;
+  let timer;
+
+  function goTo(index) {
+    slides[current].classList.remove('active');
+    dots[current].classList.remove('active');
+    current = index;
+    slides[current].classList.add('active');
+    dots[current].classList.add('active');
+    // Reset progress bar
+    bar.classList.remove('running');
+    bar.style.transition = 'none';
+    bar.style.width = '0%';
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        bar.classList.add('running');
+      });
+    });
+  }
+
+  function next() {
+    goTo((current + 1) % slides.length);
+  }
+
+  function startAuto() {
+    clearInterval(timer);
+    timer = setInterval(next, 5000);
+  }
+
+  dots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      goTo(parseInt(dot.dataset.index));
+      startAuto();
+    });
+  });
+
+  // Kick off
+  goTo(0);
+  startAuto();
+</script>
+
+</body>
+</html>
